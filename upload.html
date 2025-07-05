@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Research - ResearchBook</title>
+  <!-- Google Fonts: Poppins for general text, Inter for UI elements -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Link to the shared stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Specific styles for upload.html not already in style.css */
+    body {
+      background-color: var(--bg-color); /* Ensure background is themed */
+      color: var(--text-color); /* Ensure text is themed */
+      font-family: 'Inter', sans-serif;
+    }
+
+    .upload-container {
+      padding: 2em;
+      max-width: 900px;
+      margin: 2em auto;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px var(--box-shadow-dark);
+      color: var(--text-color);
+      text-align: left;
+      border: 1px solid var(--border-color-light);
+    }
+
+    .upload-header {
+      text-align: center;
+      margin-bottom: 2em;
+      color: var(--primary-color);
+    }
+
+    .upload-steps {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 2em;
+      position: relative;
+      border-bottom: 2px solid var(--border-color-light);
+      padding-bottom: 1em;
+    }
+
+    .upload-step {
+      padding: 0.5em 1em;
+      border-radius: 20px;
+      font-weight: 600;
+      color: #aaa;
+      position: relative;
+      transition: color 0.3s ease;
+      cursor: pointer;
+      text-align: center;
+      flex: 1;
+    }
+
+    .upload-step.active {
+      color: var(--primary-color);
+    }
+
+    .upload-step.active::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -1.2em;
+      width: 30px;
+      height: 4px;
+      background-color: var(--primary-color);
+      border-radius: 2px;
+    }
+
+    .upload-section-content {
+      display: none;
+      padding: 1em 0;
+    }
+
+    .upload-section-content.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 1.5em;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5em;
+      font-weight: 600;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea,
+    .form-group select {
+      width: calc(100% - 2em);
+      padding: 0.8em 1em;
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1em;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group input[type="email"]:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
+      outline: none;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .authors-list, .tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5em;
+      margin-top: 0.5em;
+    }
+
+    .author-tag, .keyword-tag {
+      background-color: var(--secondary-color);
+      color: white;
+      padding: 0.4em 0.8em;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .remove-tag {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 0.8em;
+      cursor: pointer;
+    }
+
+    .privacy-options, .licensing-options, .categorization-options, .abuse-settings-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8em;
+    }
+
+    .radio-option, .checkbox-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .radio-option input[type="radio"],
+    .checkbox-option input[type="checkbox"] {
+      accent-color: var(--primary-color); /* Custom color for radio/checkbox */
+      transform: scale(1.2); /* Make them a bit larger */
+    }
+
+    .blockchain-btn {
+      background-color: #FFD700; /* Gold */
+      color: #333;
+      padding: 1em 2em;
+      border: none;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+      margin-top: 1.5em;
+    }
+
+    .blockchain-btn:hover {
+      background-color: #E6BE00;
+      transform: translateY(-2px);
+    }
+
+    .drag-drop-area {
+      border: 2px dashed var(--primary-color);
+      border-radius: 12px;
+      padding: 2em;
+      text-align: center;
+      cursor: pointer;
+      background-color: rgba(var(--primary-color-rgb), 0.05);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .drag-drop-area.hover {
+      background-color: rgba(var(--primary-color-rgb), 0.1);
+      border-color: var(--accent-color);
+    }
+
+    .drag-drop-area p {
+      margin: 0.5em 0;
+      color: var(--text-color);
+    }
+
+    .file-upload-list {
+      margin-top: 1em;
+      text-align: left;
+    }
+
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--input-bg);
+      padding: 0.5em 1em;
+      border-radius: 8px;
+      margin-bottom: 0.5em;
+      border: 1px solid var(--input-border);
+    }
+
+    .file-item .remove-file {
+      background: none;
+      border: none;
+      color: #f44336;
+      cursor: pointer;
+      font-size: 1.2em;
+    }
+
+    .ai-tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+
+    .ai-tool-card {
+      background: var(--input-bg);
+      padding: 1em;
+      border-radius: 12px;
+      border: 1px solid var(--input-border);
+      box-shadow: 0 1px 5px var(--box-shadow-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .ai-tool-card h4 {
+      color: var(--primary-color);
+      font-size: 1.1em;
+      margin-bottom: 0.5em;
+    }
+    .ai-tool-card p {
+      font-size: 0.85em;
+      margin-bottom: 1em;
+      flex-grow: 1; /* Ensure consistent height */
+    }
+
+    .ai-tool-btn {
+      background-color: #673ab7; /* Purple */
+      color: white;
+      padding: 0.6em 1.2em;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .ai-tool-btn:hover {
+      background-color: #512da8;
+      transform: translateY(-2px);
+    }
+
+    .collab-input-group {
+        display: flex;
+        gap: 0.5em;
+        margin-bottom: 0.5em;
+    }
+    .collab-input-group input {
+        flex-grow: 1;
+    }
+    .add-collab-btn {
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+        padding: 0.5em 1em;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .add-collab-btn:hover {
+        background-color: #0097a7;
+    }
+
+    .collaborator-list {
+        margin-top: 1em;
+        padding: 0.5em;
+        background-color: var(--input-bg);
+        border-radius: 8px;
+        border: 1px solid var(--input-border);
+    }
+    .collaborator-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4em 0;
+        font-size: 0.9em;
+    }
+    .remove-collab-btn {
+        background: none;
+        border: none;
+        color: #f44336;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2em;
+      gap: 1em;
+    }
+
+    .navigation-buttons button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.8em 1.8em;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      flex-grow: 1;
+    }
+
+    .navigation-buttons button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+    }
+
+    .navigation-buttons button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .navigation-buttons .prev-btn {
+      background-color: #9e9e9e; /* Grey for previous */
+    }
+    .navigation-buttons .prev-btn:hover {
+      background-color: #757575;
+    }
+
+    /* Upload Progress Bar */
+    .progress-bar-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      margin-top: 0.8em;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 25px;
+      background-color: var(--accent-color);
+      border-radius: 5px;
+      text-align: center;
+      color: white;
+      line-height: 25px;
+      transition: width 0.3s ease;
+      font-weight: bold;
+    }
+
+    #uploadProgressText {
+      display: block;
+      text-align: right;
+      margin-top: 0.5em;
+      font-size: 0.9em;
+      color: var(--text-color);
+    }
+
+    /* Post-Upload Success */
+    .success-message {
+      text-align: center;
+      padding: 3em 1em;
+    }
+    .success-message h3 {
+      color: var(--primary-color);
+      font-size: 1.8em;
+      margin-bottom: 1em;
+    }
+    .success-message .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+      margin-top: 1.5em;
+      flex-wrap: wrap;
+    }
+    .success-message .share-buttons .action-btn {
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      border-radius: 25px;
+      min-width: 150px;
+    }
+    .success-message .track-link {
+      display: block;
+      margin-top: 2em;
+      font-size: 1.1em;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    .success-message .track-link:hover {
+      color: var(--accent-color);
+    }
+
+    .drag-drop-preview {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-top: 1em;
+        border: 1px solid var(--border-color-light);
+        display: none; /* Hidden by default */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .upload-steps {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .upload-step {
+            flex-basis: 45%; /* Two steps per row */
+            margin-bottom: 1em;
+            font-size: 0.9em;
+        }
+        .upload-step.active::after {
+            bottom: -0.8em;
+        }
+        .ai-tools-grid {
+            grid-template-columns: 1fr; /* Single column on small screens */
+        }
+        .navigation-buttons {
+            flex-direction: column;
+            gap: 0.8em;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .upload-container {
+            padding: 1em;
+            margin: 1em auto;
+        }
+        .upload-step {
+            flex-basis: 100%; /* One step per row on very small screens */
+            font-size: 0.85em;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea,
+        .form-group select {
+            width: calc(100% - 1.6em);
+            padding: 0.6em 0.8em;
+        }
+        .blockchain-btn, .navigation-buttons button {
+            padding: 0.8em 1em;
+            font-size: 0.9em;
+        }
+    }
+
+  </style>
+</head>
+<body class="elegant-ui light-theme">
+  <!-- Re-use the message modal and spinner from script.js, ensure body has theme class -->
+  <div id="loadingSpinner" class="loading-spinner"></div>
+  <div id="messageModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="messageModalClose">&times;</span>
+      <h2 id="messageModalTitle"></h2>
+      <p id="messageModalText"></p>
+      <button class="modal-btn" id="messageModalOK">OK</button>
+    </div>
+  </div>
+
+  <header>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="index.html" class="logo"><i class="fas fa-book-reader"></i> ResearchBook</a>
+        </div>
+        <div class="navbar-right">
+            <!-- Add any specific upload page nav items or keep it minimal -->
+            <a href="index.html" class="cta-btn back-to-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="upload-container">
+      <h2 class="upload-header"><i class="fas fa-upload"></i> Upload Your Research</h2>
+
+      <!-- Multi-step Progress Bar -->
+      <div class="upload-steps">
+        <div class="upload-step active" id="step1">1. Basic Info</div>
+        <div class="upload-step" id="step2">2. Privacy & Files</div>
+        <div class="upload-step" id="step3">3. AI Tools & Collab</div>
+        <div class="upload-step" id="step4">4. Finalize</div>
+      </div>
+
+      <form id="uploadForm" onsubmit="return false;">
+        <!-- Step 1: Basic Information -->
+        <div id="section1" class="upload-section-content active">
+          <div class="form-group">
+            <label for="paperTitle"><i class="fas fa-file-alt"></i> Paper Title</label>
+            <input type="text" id="paperTitle" placeholder="Enter the full title of your research paper" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-users"></i> Authors</label>
+            <div id="authorsContainer">
+              <div class="collab-input-group">
+                <input type="text" class="author-input" placeholder="Author Name" required>
+                <input type="email" class="author-email-input" placeholder="Author Email (Optional)">
+                <button type="button" class="add-collab-btn" onclick="addAuthor()"><i class="fas fa-plus"></i></button>
+              </div>
+            </div>
+            <div id="currentAuthors" class="authors-list"></div>
+          </div>
+          <div class="form-group">
+            <label for="institution"><i class="fas fa-university"></i> Institution</label>
+            <input type="text" id="institution" placeholder="Your institution or university name" required>
+          </div>
+          <div class="form-group">
+            <label for="fieldOfStudy"><i class="fas fa-flask"></i> Field of Study</label>
+            <select id="fieldOfStudy" required>
+              <option value="">Select Field</option>
+              <option value="ai">Artificial Intelligence & Machine Learning</option>
+              <option value="medicine">Medicine & Healthcare</option>
+              <option value="physics">Physics & Astronomy</option>
+              <option value="chemistry">Chemistry & Materials Science</option>
+              <option value="environmental">Environmental Science</option>
+              <option value="biology">Biology & Biotechnology</option>
+              <option value="engineering">Engineering</option>
+              <option value="computer_science">Computer Science</option>
+              <option value="humanities">Humanities & Social Sciences</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-tags"></i> Keywords / Tags</label>
+            <div class="collab-input-group">
+                <input type="text" id="keywordInput" placeholder="Add a keyword and press Enter">
+                <button type="button" class="add-collab-btn" onclick="addKeyword()"><i class="fas fa-plus"></i></button>
+            </div>
+            <div id="currentKeywords" class="tags-list"></div>
+          </div>
+          <div class="form-group">
+            <label for="dateCompleted"><i class="fas fa-calendar-alt"></i> Date of Completion</label>
+            <input type="date" id="dateCompleted" required>
+          </div>
+          <div class="form-group">
+            <label for="paperAbstract"><i class="fas fa-paragraph"></i> Abstract</label>
+            <textarea id="paperAbstract" placeholder="Provide a concise summary of your research" rows="5" required></textarea>
+          </div>
+          <div class="navigation-buttons">
+            <button type="button" class="next-btn" onclick="nextStep()">Next <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 2: Privacy & Files -->
+        <div id="section2" class="upload-section-content">
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> Set Privacy Options</label>
+            <div class="privacy-options">
+              <label class="radio-option">
+                <input type="radio" name="privacy" value="public" checked> Public: Visible to everyone
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="privacy" value="institution-only"> Institution Only: Visible to verified members of your institution
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="privacy" value="private"> Private: Visible only to you and invited collaborators
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="licenseType"><i class="fas fa-certificate"></i> Licensing Options</label>
+            <select id="licenseType" required>
+              <option value="">Select License</option>
+              <option value="cc-by">Creative Commons Attribution (CC BY)</option>
+              <option value="cc-by-sa">Creative Commons Attribution-ShareAlike (CC BY-SA)</option>
+              <option value="cc-by-nc">Creative Commons Attribution-NonCommercial (CC BY-NC)</option>
+              <option value="all-rights-reserved">All Rights Reserved</option>
+            </select>
+          </div>
+          <div class="form-group text-center">
+            <label><i class="fas fa-fingerprint"></i> Protect Your Work</label>
+            <button type="button" class="blockchain-btn" onclick="showMessageModal('Blockchain Timestamp', 'Your research will be securely timestamped on the blockchain, providing tamper-proof proof of ownership and preventing unauthorized alterations!')">
+              <i class="fas fa-link"></i> Protect with Blockchain Timestamp
+            </button>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-file-upload"></i> Upload Files</label>
+            <div class="drag-drop-area" id="mainFileDropArea">
+              <p><i class="fas fa-cloud-upload-alt"></i> Drag & Drop your main research paper (PDF) here or click to upload.</p>
+              <input type="file" id="mainFileInput" accept=".pdf" style="display: none;">
+            </div>
+            <div id="mainFileList" class="file-upload-list"></div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-paperclip"></i> Supplementary Files (Optional)</label>
+            <div class="drag-drop-area" id="supplementaryFileDropArea">
+              <p><i class="fas fa-cloud-upload-alt"></i> Drag & Drop datasets, code, or other supplementary files here.</p>
+              <input type="file" id="supplementaryFileInput" multiple style="display: none;">
+            </div>
+            <div id="supplementaryFileList" class="file-upload-list"></div>
+          </div>
+          <div class="form-group">
+            <label for="videoAbstract"><i class="fas fa-video"></i> Video Abstract (Optional)</label>
+            <div class="drag-drop-area" id="videoAbstractDropArea">
+              <p><i class="fas fa-cloud-upload-alt"></i> Drag & Drop your video abstract (MP4, MOV) or click to upload.</p>
+              <input type="file" id="videoAbstractInput" accept="video/*" style="display: none;">
+            </div>
+            <div id="videoAbstractList" class="file-upload-list"></div>
+          </div>
+          <div class="form-group">
+            <label for="coverImage"><i class="fas fa-image"></i> Cover Image (Optional)</label>
+            <div class="drag-drop-area" id="coverImageDropArea">
+              <p><i class="fas fa-cloud-upload-alt"></i> Drag & Drop a cover image for your paper or click to upload.</p>
+              <input type="file" id="coverImageInput" accept="image/*" style="display: none;">
+            </div>
+            <div id="coverImageList" class="file-upload-list"></div>
+            <img id="coverImagePreview" class="drag-drop-preview" alt="Cover Image Preview">
+          </div>
+          <div class="navigation-buttons">
+            <button type="button" class="prev-btn" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous</button>
+            <button type="button" class="next-btn" onclick="nextStep()">Next <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 3: AI Tools & Collaboration -->
+        <div id="section3" class="upload-section-content">
+          <h3><i class="fas fa-robot"></i> AI-Powered Tools</h3>
+          <p>Enhance your paper with smart suggestions and checks.</p>
+          <div class="ai-tools-grid">
+            <div class="ai-tool-card">
+              <h4><i class="fas fa-lightbulb"></i> Improve Title/Abstract</h4>
+              <p>Get AI suggestions to make your title and abstract more impactful and clear.</p>
+              <button type="button" class="ai-tool-btn" onclick="showMessageModal('AI Suggestion', 'AI will analyze your text and provide suggestions for improvement.')">
+                <i class="fas fa-magic"></i> Improve Now
+              </button>
+            </div>
+            <div class="ai-tool-card">
+              <h4><i class="fas fa-tags"></i> Suggest Related Tags</h4>
+              <p>AI will analyze your content and suggest relevant keywords and tags for better discoverability.</p>
+              <button type="button" class="ai-tool-btn" onclick="showMessageModal('AI Suggestion', 'AI is suggesting tags based on your content...')">
+                <i class="fas fa-tags"></i> Get Tags
+              </button>
+            </div>
+            <div class="ai-tool-card">
+              <h4><i class="fas fa-file-alt"></i> Generate Summary</h4>
+              <p>Generate a concise 1-minute summary or graphical abstract of your paper for quick overview.</p>
+              <button type="button" class="ai-tool-btn" onclick="showMessageModal('AI Tool', 'AI is generating a summary/graphical abstract for your paper.')">
+                <i class="fas fa-compress-alt"></i> Generate
+              </button>
+            </div>
+            <div class="ai-tool-card">
+              <h4><i class="fas fa-language"></i> Translate Abstract</h4>
+              <p>Translate your abstract into multiple languages to reach a wider global audience.</p>
+              <button type="button" class="ai-tool-btn" onclick="showMessageModal('AI Tool', 'AI is translating your abstract into selected languages.')">
+                <i class="fas fa-language"></i> Translate
+              </button>
+            </div>
+            <div class="ai-tool-card">
+              <h4><i class="fas fa-copy"></i> Plagiarism Checker</h4>
+              <p>Run a quick check for originality against a vast database to ensure your work is unique.</p>
+              <button type="button" class="ai-tool-btn" onclick="showMessageModal('AI Tool', 'AI is scanning your paper for plagiarism. This may take a moment.')">
+                <i class="fas fa-search"></i> Check Plagiarism
+              </button>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 2em;"><i class="fas fa-users"></i> Collaboration Options</h3>
+          <div class="form-group">
+            <label for="coAuthorEmail"><i class="fas fa-user-plus"></i> Add Co-authors / Mentors / Guides (Optional)</label>
+            <div class="collab-input-group">
+              <input type="email" id="coAuthorEmail" placeholder="Co-author's email or ResearchBook ID">
+              <button type="button" class="add-collab-btn" onclick="addCollaborator('coAuthorEmail', 'coAuthorsList')"><i class="fas fa-plus"></i> Add Co-author</button>
+            </div>
+            <div id="coAuthorsList" class="collaborator-list"></div>
+          </div>
+          <div class="form-group">
+            <label for="mentorEmail"><i class="fas fa-user-tie"></i> Add Mentors / Guides (Optional)</label>
+            <div class="collab-input-group">
+              <input type="email" id="mentorEmail" placeholder="Mentor's email or ResearchBook ID">
+              <button type="button" class="add-collab-btn" onclick="addCollaborator('mentorEmail', 'mentorsList')"><i class="fas fa-plus"></i> Add Mentor</button>
+            </div>
+            <div id="mentorsList" class="collaborator-list"></div>
+          </div>
+          <div class="form-group">
+            <button type="button" class="action-btn purple-btn" onclick="showMessageModal('Collaboration', 'Find and add other collaborating institutions or research clubs.')">
+              <i class="fas fa-building"></i> Add Collaborating Institutions / Clubs
+            </button>
+             <button type="button" class="action-btn orange-btn" onclick="showMessageModal('Notifications', 'Collaborators will be notified of your project submission!')" style="margin-top: 1em;">
+              <i class="fas fa-bell"></i> Notify Collaborators
+            </button>
+          </div>
+          <div class="form-group checkbox-option">
+              <input type="checkbox" id="teamProject">
+              <label for="teamProject">Upload as a Team Project (enable team dashboard & shared editing)</label>
+          </div>
+
+          <div class="navigation-buttons">
+            <button type="button" class="prev-btn" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous</button>
+            <button type="button" class="next-btn" onclick="nextStep()">Next <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 4: Finalize & Submit -->
+        <div id="section4" class="upload-section-content">
+          <h3><i class="fas fa-clipboard-check"></i> Final Review & Submission</h3>
+
+          <div class="form-group">
+            <label for="categorization"><i class="fas fa-folder-open"></i> Categorization & Research Type</label>
+            <select id="categorization" required>
+              <option value="">Select Category/Type</option>
+              <option value="research_paper">Research Paper (Peer-Reviewed)</option>
+              <option value="thesis_dissertation">Thesis / Dissertation</option>
+              <option value="conference_proceeding">Conference Proceeding</option>
+              <option value="preprint">Preprint</option>
+              <option value="book_chapter">Book Chapter</option>
+              <option value="review_article">Review Article</option>
+              <option value="data_set">Dataset</option>
+              <option value="code_repository">Code Repository</option>
+              <option value="patent">Patent</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-cog"></i> Abuse / Report Settings</label>
+            <div class="abuse-settings-options">
+                <label class="checkbox-option">
+                    <input type="checkbox" id="allowComments" checked> Allow comments from other users
+                </label>
+                <label class="checkbox-option">
+                    <input type="checkbox" id="safeView"> Enable "Safe View" (filters potentially sensitive content by default)
+                </label>
+                <label class="checkbox-option">
+                    <input type="checkbox" id="encryptedAccess"> Require encrypted access for this paper (higher security for sensitive topics)
+                </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-eye"></i> Live Preview (Mock)</label>
+            <div class="live-preview-box" style="background-color: var(--input-bg); padding: 1.5em; border-radius: 8px; border: 1px solid var(--input-border); min-height: 200px; display: flex; align-items: center; justify-content: center; color: #777; font-style: italic;">
+              <p>Your paper's preview will appear here, showing how it looks on ResearchBook.</p>
+            </div>
+          </div>
+
+          <div class="form-group checkbox-option">
+            <input type="checkbox" id="originalityConfirm" required>
+            <label for="originalityConfirm">I confirm that this work is original and I have the right to publish it on ResearchBook.</label>
+          </div>
+
+          <div class="navigation-buttons">
+            <button type="button" class="prev-btn" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous</button>
+            <button type="submit" class="submit-btn" onclick="submitForm()"><i class="fas fa-cloud-upload-alt"></i> Submit Research</button>
+          </div>
+
+          <!-- Progress bar for final upload -->
+          <div class="progress-bar-container" style="display: none;" id="uploadProgressBarContainer">
+            <div class="progress-bar" id="uploadProgressBar"></div>
+          </div>
+          <span id="uploadProgressText" style="display: none;">0% Complete</span>
+
+          <!-- Success message after upload -->
+          <div class="success-message" style="display: none;" id="uploadSuccessMessage">
+            <h3><i class="fas fa-check-circle"></i> Upload Successful!</h3>
+            <p>Your research paper has been successfully uploaded to ResearchBook.</p>
+            <div class="share-buttons">
+                <button class="action-btn blue-btn"><i class="fas fa-share-alt"></i> Share Your Paper</button>
+                <button class="action-btn green-btn"><i class="fas fa-chart-line"></i> Track Impact</button>
+            </div>
+            <a href="index.html" class="track-link"><i class="fas fa-home"></i> Go to Home</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ResearchBook. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Re-initialize general modals for this page
+      const messageModal = document.getElementById('messageModal');
+      const messageModalTitle = document.getElementById('messageModalTitle');
+      const messageModalText = document.getElementById('messageModalText');
+      const messageModalClose = document.getElementById('messageModalClose');
+      const messageModalOK = document.getElementById('messageModalOK');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+
+      function showMessageModal(title, message) {
+        messageModalTitle.innerText = title;
+        messageModalText.innerText = message;
+        messageModal.style.display = 'flex';
+      }
+
+      if (messageModalClose) {
+        messageModalClose.onclick = () => { messageModal.style.display = 'none'; };
+      }
+      if (messageModalOK) {
+        messageModalOK.onclick = () => { messageModal.style.display = 'none'; };
+      }
+      window.onclick = (event) => {
+        if (event.target === messageModal) {
+          messageModal.style.display = 'none';
+        }
+      };
+
+
+      // --- Multi-step Form Logic ---
+      let currentStep = 1;
+      const totalSteps = 4;
+      const uploadStepsDivs = document.querySelectorAll('.upload-step');
+      const uploadSections = document.querySelectorAll('.upload-section-content');
+      const uploadForm = document.getElementById('uploadForm');
+
+      function updateFormVisibility() {
+        uploadSections.forEach((section, index) => {
+          if (index + 1 === currentStep) {
+            section.classList.add('active');
+            section.style.display = 'block';
+          } else {
+            section.classList.remove('active');
+            section.style.display = 'none';
+          }
+        });
+
+        uploadStepsDivs.forEach((stepDiv, index) => {
+          if (index + 1 === currentStep) {
+            stepDiv.classList.add('active');
+          } else {
+            stepDiv.classList.remove('active');
+          }
+        });
+      }
+
+      window.nextStep = function() {
+        // Basic validation for the current step
+        const currentSection = document.getElementById(`section${currentStep}`);
+        const inputs = currentSection.querySelectorAll('input[required], textarea[required], select[required]');
+        let allValid = true;
+        inputs.forEach(input => {
+          if (!input.value.trim()) {
+            allValid = false;
+            input.style.borderColor = 'red'; // Highlight invalid fields
+          } else {
+            input.style.borderColor = ''; // Reset border
+          }
+        });
+
+        // Specific validation for authors and keywords if they are empty
+        if (currentStep === 1) {
+            const authorsList = document.getElementById('currentAuthors');
+            if (authorsList && authorsList.children.length === 0) {
+                allValid = false;
+                showMessageModal("Validation Error", "Please add at least one author.");
+            }
+            const keywordsList = document.getElementById('currentKeywords');
+            if (keywordsList && keywordsList.children.length === 0) {
+                // If keywords are not strictly required, you can remove this check
+                // For this mock, we'll make them optional if the input is left empty.
+                // If the input was used and then cleared, the tag list might still be empty.
+                // Let's assume for now keywords are optional unless user tries to add empty ones.
+            }
+        }
+        // Specific validation for main file upload
+        if (currentStep === 2) {
+            const mainFileInput = document.getElementById('mainFileInput');
+            if (mainFileInput && !mainFileInput.files.length) {
+                allValid = false;
+                showMessageModal("Validation Error", "Please upload your main research paper (PDF).");
+            }
+        }
+
+
+        if (allValid && currentStep < totalSteps) {
+          currentStep++;
+          updateFormVisibility();
+        } else if (!allValid) {
+            showMessageModal("Validation Error", "Please fill in all required fields to proceed.");
+        }
+      };
+
+      window.prevStep = function() {
+        if (currentStep > 1) {
+          currentStep--;
+          updateFormVisibility();
+        }
+      };
+
+      // Initial display
+      updateFormVisibility();
+
+      // --- Dynamic Author and Keyword Fields ---
+      window.addAuthor = function() {
+        const authorInput = document.querySelector('#authorsContainer .author-input');
+        const authorEmailInput = document.querySelector('#authorsContainer .author-email-input');
+        const authorName = authorInput.value.trim();
+        const authorEmail = authorEmailInput.value.trim();
+
+        if (authorName) {
+          const authorsList = document.getElementById('currentAuthors');
+          const authorTag = document.createElement('span');
+          authorTag.classList.add('author-tag');
+          authorTag.innerHTML = `${authorName} ${authorEmail ? `(${authorEmail})` : ''} <button type="button" class="remove-tag">&times;</button>`;
+          authorsList.appendChild(authorTag);
+
+          authorTag.querySelector('.remove-tag').onclick = function() {
+            authorTag.remove();
+          };
+
+          authorInput.value = '';
+          authorEmailInput.value = '';
+          authorInput.focus();
+          authorInput.style.borderColor = ''; // Reset border
+        } else {
+            showMessageModal("Input Required", "Please enter an author name.");
+            authorInput.style.borderColor = 'red';
+        }
+      };
+
+      window.addKeyword = function() {
+        const keywordInput = document.getElementById('keywordInput');
+        const keywordText = keywordInput.value.trim();
+
+        if (keywordText) {
+          const keywordsList = document.getElementById('currentKeywords');
+          const keywordTag = document.createElement('span');
+          keywordTag.classList.add('keyword-tag');
+          keywordTag.innerHTML = `${keywordText} <button type="button" class="remove-tag">&times;</button>`;
+          keywordsList.appendChild(keywordTag);
+
+          keywordTag.querySelector('.remove-tag').onclick = function() {
+            keywordTag.remove();
+          };
+
+          keywordInput.value = '';
+          keywordInput.style.borderColor = ''; // Reset border
+        }
+      };
+
+      // Allow adding keyword on Enter key press
+      const keywordInput = document.getElementById('keywordInput');
+      if (keywordInput) {
+          keywordInput.addEventListener('keypress', function(e) {
+              if (e.key === 'Enter') {
+                  e.preventDefault(); // Prevent form submission
+                  window.addKeyword();
+              }
+          });
+      }
+
+      // --- File Upload Logic (Drag & Drop) ---
+      function setupFileUpload(dropAreaId, fileInputId, fileListId, previewId = null) {
+        const dropArea = document.getElementById(dropAreaId);
+        const fileInput = document.getElementById(fileInputId);
+        const fileList = document.getElementById(fileListId);
+        const preview = previewId ? document.getElementById(previewId) : null;
+
+        if (!dropArea || !fileInput || !fileList) return; // Exit if elements not found
+
+        // Simulate click on hidden file input
+        dropArea.addEventListener('click', () => {
+          fileInput.click();
+        });
+
+        // Handle file selection from input
+        fileInput.addEventListener('change', (event) => {
+          handleFiles(event.target.files);
+        });
+
+        // Handle drag-and-drop events
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dropArea.addEventListener(eventName, () => dropArea.classList.add('hover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+          dropArea.addEventListener(eventName, () => dropArea.classList.remove('hover'), false);
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+          const dt = event.dataTransfer;
+          const files = dt.files;
+          handleFiles(files);
+        }, false);
+
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+
+        function handleFiles(files) {
+          fileList.innerHTML = ''; // Clear previous list for single file uploads (like main PDF/image)
+          if (fileInput.multiple) {
+            // For multiple files, append
+            Array.from(files).forEach(file => displayFile(file));
+          } else {
+            // For single file, replace
+            if (files.length > 0) {
+              displayFile(files[0]);
+              // Also update the input's files property to actually contain the dropped file
+              const dataTransfer = new DataTransfer();
+              dataTransfer.items.add(files[0]);
+              fileInput.files = dataTransfer.files;
+            }
+          }
+        }
+
+        function displayFile(file) {
+          const fileItem = document.createElement('div');
+          fileItem.classList.add('file-item');
+          fileItem.innerHTML = `
+            <span><i class="fas fa-file"></i> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+            <button type="button" class="remove-file" data-filename="${file.name}">&times;</button>
+          `;
+          fileList.appendChild(fileItem);
+
+          fileItem.querySelector('.remove-file').addEventListener('click', (e) => {
+            fileItem.remove();
+            // Clear the actual file input's files array if this was the only one
+            if (!fileInput.multiple) {
+                fileInput.value = ''; // Clears selected file
+                if (preview) {
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            } else {
+                // For multiple files, you'd need more complex logic to remove from DataTransfer object
+                // For simplicity in mock, we'll just remove from UI.
+            }
+          });
+
+          // Handle preview for images (cover image)
+          if (preview && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              preview.src = e.target.result;
+              preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          } else if (preview) {
+              preview.src = '';
+              preview.style.display = 'none';
+          }
+        }
+      }
+
+      setupFileUpload('mainFileDropArea', 'mainFileInput', 'mainFileList');
+      setupFileUpload('supplementaryFileDropArea', 'supplementaryFileInput', 'supplementaryFileList');
+      setupFileUpload('videoAbstractDropArea', 'videoAbstractInput', 'videoAbstractList');
+      setupFileUpload('coverImageDropArea', 'coverImageInput', 'coverImageList', 'coverImagePreview');
+
+
+      // --- Collaborator / Mentor List Management ---
+      window.addCollaborator = function(inputId, listId) {
+        const input = document.getElementById(inputId);
+        const list = document.getElementById(listId);
+        const value = input.value.trim();
+
+        if (value) {
+          const item = document.createElement('div');
+          item.classList.add('collaborator-item');
+          item.innerHTML = `
+            <span>${value}</span>
+            <button type="button" class="remove-collab-btn">&times;</button>
+          `;
+          list.appendChild(item);
+
+          item.querySelector('.remove-collab-btn').onclick = function() {
+            item.remove();
+          };
+
+          input.value = '';
+          input.style.borderColor = ''; // Reset border
+        } else {
+            showMessageModal("Input Required", "Please enter a valid email or ResearchBook ID.");
+            input.style.borderColor = 'red';
+        }
+      };
+
+
+      // --- Final Submission Logic ---
+      window.submitForm = function() {
+        const originalityConfirm = document.getElementById('originalityConfirm');
+        if (!originalityConfirm.checked) {
+          showMessageModal("Consent Required", "Please confirm that this work is original and you have the right to publish it.");
+          return;
+        }
+
+        const uploadProgressBarContainer = document.getElementById('uploadProgressBarContainer');
+        const uploadProgressBar = document.getElementById('uploadProgressBar');
+        const uploadProgressText = document.getElementById('uploadProgressText');
+        const uploadSuccessMessage = document.getElementById('uploadSuccessMessage');
+
+        // Hide form, show progress bar
+        uploadForm.style.display = 'none';
+        uploadProgressBarContainer.style.display = 'block';
+        uploadProgressText.style.display = 'block';
+        loadingSpinner.style.display = 'block'; // Show general loading spinner
+
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 10;
+          if (progress <= 100) {
+            uploadProgressBar.style.width = `${progress}%`;
+            uploadProgressBar.innerText = `${progress}%`;
+            uploadProgressText.innerText = `${progress}% Complete`;
+          } else {
+            clearInterval(interval);
+            loadingSpinner.style.display = 'none'; // Hide general loading spinner
+            uploadProgressBarContainer.style.display = 'none';
+            uploadProgressText.style.display = 'none';
+            uploadSuccessMessage.style.display = 'block';
+            showMessageModal("Success!", "Your research paper has been successfully uploaded to ResearchBook!");
+          }
+        }, 200); // Simulate upload progress
+      };
+    });
+  </script>
+</body>
+</html>
