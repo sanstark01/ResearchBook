@@ -1,0 +1,1229 @@
+/* Core Layout and Typography */
+body {
+  margin: 0;
+  padding: 0; /* Ensure no default padding from browser */
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+  font-family: 'Inter', sans-serif; /* Using Inter as primary font */
+  scroll-behavior: smooth;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Base styles from app.css */
+* {
+  list-style: none;
+  text-decoration: none;
+}
+
+a {
+  color: inherit; /* Inherit color from parent for general links */
+}
+a:visited {
+  color: inherit;
+}
+a:hover {
+  color: var(--accent-color); /* Use accent color for hover */
+}
+
+
+/* Theme Variables */
+:root {
+  /* Light Theme Defaults */
+  --bg-color: #f9f9f9;
+  --text-color: #333;
+  --primary-color: #3949ab; /* Indigo */
+  --secondary-color: #5c6bc0; /* Light Indigo */
+  --accent-color: #00c0ff; /* Bright Blue */
+  --card-bg: white;
+  --box-shadow-light: rgba(0,0,0,0.05);
+  --box-shadow-dark: rgba(0,0,0,0.3);
+  --border-color-light: #e0e0e0;
+  --input-bg: #f5f5f5;
+  --input-border: #ddd;
+}
+
+/* Dark Theme */
+body.dark-theme {
+  --bg-color: #1a1a2e;
+  --text-color: #e0e0e0;
+  --primary-color: #cddc39; /* Lime green */
+  --secondary-color: #aed581; /* Light green */
+  --accent-color: #00bcd4; /* Cyan */
+  --card-bg: #2c2c54;
+  --box-shadow-light: rgba(0,0,0,0.6);
+  --box-shadow-dark: rgba(0,0,0,0.8);
+  --border-color-light: #444;
+  --input-bg: #3a3a60;
+  --input-border: #555;
+}
+
+/* Chat/Movie Theme (Dark, Sleek) */
+body.chat-movie-theme {
+  --bg-color: #121212; /* Very dark grey */
+  --text-color: #e0e0e0;
+  --primary-color: #bb86fc; /* Light purple for accents */
+  --secondary-color: #3700b3; /* Darker purple */
+  --accent-color: #03dac6; /* Teal */
+  --card-bg: #1f1f1f;
+  --box-shadow-light: rgba(0,0,0,0.4);
+  --box-shadow-dark: rgba(0,0,0,0.6);
+  --border-color-light: #2a2a2a;
+  --input-bg: #2a2a2a;
+  --input-border: #444;
+}
+
+/* Event Theme (Bright, Energetic) */
+body.event-theme {
+  --bg-color: #ffe0b2; /* Light orange/peach */
+  --text-color: #424242;
+  --primary-color: #e64a19; /* Deep orange */
+  --secondary-color: #ff8a65; /* Lighter orange */
+  --accent-color: #ffc107; /* Amber */
+  --card-bg: #fff3e0;
+  --box-shadow-light: rgba(0,0,0,0.1);
+  --box-shadow-dark: rgba(0,0,0,0.3);
+  --border-color-light: #ffd79b;
+  --input-bg: #fff8e1;
+  --input-border: #ffcc80;
+}
+
+/* Onam Theme (Traditional Kerala colors) */
+body.onam-theme {
+  --bg-color: #f0f4c3; /* Light yellowish green */
+  --text-color: #3e2723; /* Dark brown */
+  --primary-color: #43a047; /* Green */
+  --secondary-color: #81c784; /* Light green */
+  --accent-color: #ffeb3b; /* Bright Yellow/Gold */
+  --card-bg: #fffde7; /* Creamy white */
+  --box-shadow-light: rgba(0,0,0,0.08);
+  --box-shadow-dark: rgba(0,0,0,0.2);
+  --border-color-light: #e6ee9c;
+  --input-bg: #f1f8e9;
+  --input-border: #c5e1a5;
+  /* Optional: background pattern for Onam */
+  /* background-image: url('onam-pattern.png'); */
+  /* background-repeat: repeat; */
+}
+
+
+/* Define RGB for primary color for rgba usage */
+body:not(.dark-theme) { /* Light theme */
+  --primary-color-rgb: 57, 73, 171; /* Indigo RGB */
+}
+body.dark-theme {
+  --primary-color-rgb: 205, 220, 57; /* Lime green RGB */
+}
+body.chat-movie-theme {
+    --primary-color-rgb: 187, 134, 252; /* Light purple RGB */
+}
+body.event-theme {
+    --primary-color-rgb: 230, 74, 25; /* Deep orange RGB */
+}
+body.onam-theme {
+    --primary-color-rgb: 67, 160, 71; /* Green RGB */
+}
+
+
+/* General Styling for elegant-ui */
+body.elegant-ui {
+  font-family: 'Segoe UI', 'Inter', sans-serif;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid var(--primary-color); /* Primary color */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Off-screen Menu (from app.css, adapted) */
+.off-screen-menu {
+  background-color: var(--card-bg); /* Use theme variable */
+  height: 100vh;
+  width: 100%;
+  max-width: 320px; /* Adjusted max-width for better fit */
+  position: fixed;
+  top: 0;
+  right: -320px; /* Hidden by default */
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+  transition: right 0.3s ease-out;
+  z-index: 1000; /* Ensure it's above other content */
+  overflow-y: auto; /* Enable scrolling for long menus */
+}
+
+.off-screen-menu.active {
+  right: 0; /* Slide in */
+}
+
+.off-screen-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1; /* Allow content to grow */
+}
+
+.off-screen-menu li {
+  margin-bottom: 0.5em; /* Reduced margin */
+}
+
+.off-screen-menu h4.off-screen-category {
+  font-size: 1em; /* Adjusted font size */
+  color: var(--primary-color);
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  padding-left: 0.5em;
+  border-left: 3px solid var(--primary-color);
+}
+
+.off-screen-menu a {
+  display: block;
+  padding: 0.6em 0.5em; /* Adjusted padding */
+  color: var(--text-color);
+  font-size: 0.9em; /* Adjusted font size */
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.off-screen-menu a:hover {
+  background-color: var(--input-bg); /* Use a subtle hover background */
+}
+
+.off-screen-close {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8em 1.2em;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1em;
+  align-self: center; /* Center the close button */
+  width: calc(100% - 2em); /* Adjust width */
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.off-screen-close:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Navbar (from app.css, adapted) */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8em 1.5em; /* Adjusted padding */
+  background-color: var(--card-bg);
+  box-shadow: 0 2px 10px var(--box-shadow-light);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.navbar-left, .navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1em; /* Space between elements */
+}
+
+.navbar-left .logo {
+  font-weight: 700;
+  font-size: 1.2em;
+  color: var(--primary-color);
+}
+
+.gem-menu-toggle {
+  font-size: 1.5em;
+  cursor: pointer;
+  color: var(--primary-color);
+  padding: 0.2em;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.gem-menu-toggle:hover {
+  background-color: var(--input-bg);
+}
+
+.navbar-middle {
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* Allows it to take available space */
+  max-width: 500px; /* Limit search bar width */
+  margin: 0 1em; /* Horizontal margin */
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.7em 1em;
+  border: 1px solid var(--input-border);
+  border-radius: 20px; /* Pill shape */
+  font-size: 0.9em;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
+  outline: none;
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 1.1em;
+  margin-left: -2.5em; /* Overlay on input for icon */
+  cursor: pointer;
+  padding: 0.5em;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.search-btn:hover {
+  background-color: var(--input-bg);
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.4em;
+  cursor: pointer;
+  padding: 0.5em;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  position: relative; /* For tooltip */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  background-color: var(--input-bg);
+  color: var(--primary-color);
+}
+
+.profile-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.profile-btn img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  object-fit: cover;
+  transition: border-color 0.2s ease;
+}
+
+.profile-btn img:hover {
+  border-color: var(--accent-color);
+}
+
+.profile-dropdown-container, .theme-palette-dropdown-container {
+  position: relative;
+}
+
+.profile-dropdown, .theme-palette-dropdown {
+  position: absolute;
+  top: 120%; /* Position below the button */
+  right: 0;
+  background-color: var(--card-bg);
+  box-shadow: 0 4px 15px var(--box-shadow-dark);
+  border-radius: 8px;
+  min-width: 180px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 100;
+  padding: 0.5em 0;
+  border: 1px solid var(--border-color-light);
+}
+
+.profile-dropdown.active, .theme-palette-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.profile-dropdown a, .theme-palette-dropdown span.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.8em 1em;
+  color: var(--text-color);
+  font-size: 0.95em;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.profile-dropdown a i {
+  color: var(--primary-color);
+}
+
+.profile-dropdown a:hover, .theme-palette-dropdown span.theme-option:hover {
+  background-color: var(--input-bg);
+}
+
+/* Tooltip Styles */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: var(--primary-color);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the button */
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.8em;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--primary-color) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Bottom Navigation for Mobile (from app.css, adapted) */
+.bottom-nav {
+  display: none; /* Hidden by default, shown on mobile */
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--card-bg);
+  box-shadow: 0 -2px 10px var(--box-shadow-light);
+  padding: 0.5em 0;
+  z-index: 99;
+  border-top: 1px solid var(--border-color-light);
+}
+
+.bottom-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-color);
+  font-size: 0.8em;
+  padding: 0.3em 0.5em;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.bottom-nav a i {
+  font-size: 1.4em;
+  margin-bottom: 0.2em;
+}
+
+.bottom-nav a.active, .bottom-nav a:hover {
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+}
+
+
+/* Main Content Layout */
+.main-content {
+  padding: 1.5em;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box; /* Ensures padding is included */
+  padding-bottom: 80px; /* Space for fixed bottom nav */
+}
+
+/* Sections */
+section {
+  display: none; /* Hidden by default */
+  padding-top: 1em;
+}
+
+section.active-section {
+  display: block; /* Show active section */
+}
+
+.section-title {
+  color: var(--primary-color);
+  font-size: 2em;
+  margin-bottom: 1em;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between title and potential icon/animation */
+}
+
+.section-subtitle {
+  color: var(--secondary-color);
+  font-size: 1.5em;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+/* Cards & Tiles */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5em;
+  margin-bottom: 2em;
+}
+
+.card, .tile, .paper-card, .author-card, .info-card, .event-card, .setting-option {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px var(--box-shadow-light);
+  padding: 1.5em;
+  border: 1px solid var(--border-color-light);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover, .tile:hover, .paper-card:hover, .author-card:hover, .info-card:hover, .event-card:hover, .setting-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px var(--box-shadow-dark);
+}
+
+.hero {
+  text-align: center;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 4em 2em;
+  border-radius: 15px;
+  margin-bottom: 2em;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.hero h1 {
+  font-size: 2.5em;
+  margin-bottom: 0.5em;
+  font-weight: 700;
+}
+
+.hero p {
+  font-size: 1.2em;
+  margin-bottom: 1.5em;
+  font-weight: 300;
+}
+
+.cta-btn {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 1em 2em;
+  border-radius: 8px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 600;
+}
+
+.cta-btn:hover {
+  background-color: darken(var(--accent-color), 10%);
+  transform: translateY(-2px);
+}
+
+.tile {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+}
+
+.tile i {
+  font-size: 2.5em;
+  color: var(--primary-color);
+  margin-bottom: 0.5em;
+}
+
+.paper-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Push actions to bottom */
+}
+
+.paper-card h3 {
+  color: var(--primary-color);
+  font-size: 1.3em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.paper-card .author {
+  font-style: italic;
+  color: var(--secondary-color);
+  margin-bottom: 0.5em;
+}
+
+.paper-card .meta {
+  font-size: 0.85em;
+  color: #777;
+  margin-bottom: 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.paper-card .snippet {
+  font-size: 0.9em;
+  line-height: 1.6;
+  margin-bottom: 1em;
+  flex-grow: 1; /* Allow snippet to take available space */
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 1em; /* Space from snippet */
+}
+
+.btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.6em 1.2em;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.btn:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-1px);
+}
+
+.btn.icon-btn {
+  padding: 0.6em;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  justify-content: center;
+}
+
+.btn.red-btn {
+  background-color: #e57373; /* Light red */
+}
+.btn.red-btn:hover {
+  background-color: #ef5350; /* Darker red */
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1em;
+  margin-bottom: 2em;
+}
+
+.category-card {
+  text-align: center;
+  padding: 1.5em 1em;
+  font-weight: 600;
+  font-size: 1.1em;
+  color: var(--primary-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.category-card:hover {
+  background-color: var(--input-bg);
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  justify-content: center;
+  margin-bottom: 2em;
+}
+
+.filter-select, .filter-input {
+  padding: 0.8em 1.2em;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95em;
+  transition: border-color 0.3s ease;
+}
+
+.filter-select:focus, .filter-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.filter-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: background-color 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: var(--secondary-color);
+}
+
+.info-card {
+  padding: 2em;
+  text-align: center;
+}
+
+.ai-assistant-content ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8em;
+  margin-bottom: 1.5em;
+}
+
+.ai-assistant-content li {
+  flex-basis: calc(50% - 0.8em); /* Two items per row on larger screens */
+  box-sizing: border-box;
+}
+
+.action-btn {
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 0.8em 1.2em;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  font-weight: 500;
+}
+
+.action-btn:hover {
+  background-color: darken(var(--secondary-color), 10%);
+  transform: translateY(-1px);
+}
+
+.ai-input-area {
+  margin-top: 1.5em;
+  text-align: left;
+}
+
+#aiInputText {
+  width: calc(100% - 2em); /* Full width minus padding */
+  min-height: 120px;
+  padding: 1em;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 1em;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  margin-bottom: 1em;
+  resize: vertical;
+}
+
+.ai-process-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+.ai-process-btn:hover {
+  background-color: var(--secondary-color);
+}
+
+.ai-output {
+  margin-top: 2em;
+  padding: 1.5em;
+  background-color: var(--input-bg);
+  border-radius: 8px;
+  text-align: left;
+  border: 1px solid var(--border-color-light);
+}
+
+.ai-output h3 {
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 0.8em;
+}
+
+.ai-output p {
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.requests-list {
+  margin-top: 1.5em;
+}
+
+.request-item {
+  margin-bottom: 1em;
+  text-align: left;
+}
+
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.request-item h4 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.1em;
+}
+
+.request-time {
+  font-size: 0.8em;
+  color: #888;
+}
+
+.request-item p {
+  font-size: 0.9em;
+  margin-bottom: 1em;
+}
+
+.request-actions {
+  display: flex;
+  gap: 0.8em;
+  justify-content: flex-end;
+}
+
+.profile-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary-color);
+}
+
+.profile-avatar.large {
+  width: 100px;
+  height: 100px;
+  margin-right: 1em;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5em;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  justify-content: center;
+}
+
+.profile-header > div {
+  margin-left: 1em; /* Space from avatar */
+  text-align: left;
+}
+
+.profile-header h3 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.8em;
+}
+
+.profile-header .meta {
+  color: var(--secondary-color);
+  font-size: 1em;
+  margin-bottom: 0.5em;
+}
+
+.profile-header .bio {
+  font-size: 0.9em;
+  color: var(--text-color);
+  max-width: 600px;
+}
+
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Single column on mobile */
+  gap: 1em;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 1.5em;
+  text-align: left;
+}
+
+.info-item h4 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  color: var(--secondary-color);
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.info-item p {
+  font-size: 0.95em;
+  color: var(--text-color);
+}
+
+.analytics-overview {
+  text-align: center;
+}
+
+.analytics-overview .tile h4 {
+  color: var(--primary-color);
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+.analytics-overview .tile p {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.setting-option {
+  text-align: left;
+  margin-bottom: 1.5em;
+}
+
+.setting-option h3 {
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-size: 1.2em;
+}
+
+.setting-option p {
+  font-size: 0.95em;
+  color: var(--text-color);
+  margin-bottom: 1em;
+}
+
+.setting-option .action-btn {
+  width: auto;
+  padding: 0.7em 1.2em;
+}
+
+/* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 10000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  backdrop-filter: blur(5px); /* Optional blur effect */
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  margin: auto;
+  padding: 2em;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px var(--box-shadow-dark);
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  border: 1px solid var(--border-color-light);
+  transform: translateY(-50px); /* Initial state for animation */
+  opacity: 0; /* Initial state for animation */
+  animation: modalFadeIn 0.3s forwards;
+}
+
+@keyframes modalFadeIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content h2 {
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+.modal-content p {
+  color: var(--text-color);
+  margin-bottom: 1.5em;
+  line-height: 1.5;
+}
+
+.close-btn {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: var(--primary-color);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.modal-btn:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Sticky AI Assistant Button (old one, now replaced by Lottie) */
+.sticky-assistant {
+  display: none; /* Hide the old sticky button */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  font-size: 0.9em;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.sticky-assistant:hover {
+  background-color: var(--secondary-color);
+}
+
+/* AI Assistant Lottie Button */
+#aiAssistantBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+
+/* Flower animation (for Onam Theme) */
+#flowerContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0; /* Behind other content */
+  overflow: hidden;
+}
+
+.flower {
+  position: absolute;
+  background-color: #ffd700; /* Gold */
+  border-radius: 50%;
+  opacity: 0;
+  animation: fall linear infinite;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .navbar-middle {
+    display: none; /* Hide search bar on smaller screens */
+  }
+
+  .navbar-right {
+    gap: 0.5em;
+  }
+
+  .main-content {
+    padding: 1em;
+  }
+
+  .section-title {
+    font-size: 1.8em;
+  }
+
+  .hero {
+    padding: 3em 1em;
+  }
+
+  .hero h1 {
+    font-size: 2em;
+  }
+
+  .hero p {
+    font-size: 1em;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr; /* Single column layout */
+  }
+
+  .bottom-nav {
+    display: flex; /* Show bottom nav on mobile */
+  }
+
+  .navbar-right .icon-btn {
+    font-size: 1.2em;
+    padding: 0.4em;
+  }
+
+  .navbar-left .logo {
+    font-size: 1.1em;
+  }
+
+  .bottom-nav a {
+    font-size: 0.7em;
+  }
+
+  .bottom-nav i {
+    font-size: 1.2em;
+  }
+
+  .hero {
+    padding: 3em 0.5em;
+  }
+
+  .hero h1 {
+    font-size: 1.8em;
+  }
+
+  .hero p {
+    font-size: 0.9em;
+  }
+
+  .cta-btn {
+    padding: 0.8em 1.5em;
+    font-size: 0.9em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  .card, .tile, .paper-card, .author-card, .info-card, .event-card, .setting-option {
+    padding: 1em;
+    margin: 0.8em auto;
+  }
+
+  .card-grid {
+    gap: 1em;
+  }
+
+  .tile {
+    min-height: 120px;
+  }
+
+  .icon-animate {
+    font-size: 1.2em;
+    margin: 0.5em;
+    padding: 0.8em;
+  }
+
+  .search-input {
+    width: 150px; /* Even smaller search input on very small screens */
+  }
+  .search-input:focus {
+    width: calc(100% - 2em); /* Expand on focus if needed, but not on mobile nav */
+  }
+}
